@@ -1,0 +1,14 @@
+{
+  "from": {
+    "alias": "device",
+    "sourcePathPattern": "root.platform.devices.*",
+    "objectTypes": ["DEVICE"]
+  },
+  "fields": [
+    { "name": "path", "source": "path", "alias": "device" },
+    { "name": "displayName", "source": "displayName", "alias": "device" },
+    { "name": "type", "source": "type", "alias": "device" }
+  ],
+  "orderBy": [{ "field": "path", "dir": "asc" }],
+  "limit": 2000
+}

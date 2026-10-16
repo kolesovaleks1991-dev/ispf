@@ -1,0 +1,20 @@
+{
+  "name": "evaluateExpressionCel",
+  "description": "То же, что evaluateExpression: a operator b (+, -, *, /). Реализация — CEL (sourceType expression).",
+  "sourceType": "expression",
+  "sourceBody": "input.operator == \"+\" ? input.a + input.b : input.operator == \"-\" ? input.a - input.b : input.operator == \"*\" ? input.a * input.b : input.operator == \"/\" ? (input.b == 0.0 ? 0.0 : input.a / input.b) : 0.0",
+  "inputSchema": {
+    "name": "evaluateExpressionCelIn",
+    "fields": [
+      { "name": "a", "type": "DOUBLE", "nullable": false },
+      { "name": "b", "type": "DOUBLE", "nullable": false },
+      { "name": "operator", "type": "STRING", "nullable": false }
+    ]
+  },
+  "outputSchema": {
+    "name": "evaluateExpressionCelOut",
+    "fields": [
+      { "name": "result", "type": "DOUBLE", "nullable": false }
+    ]
+  }
+}

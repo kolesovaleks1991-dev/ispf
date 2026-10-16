@@ -1,0 +1,20 @@
+{
+  "name": "evaluateExpression",
+  "description": "Вычисляет a operator b (+, -, *, /). При делении на 0 result = 0.",
+  "sourceType": "expression",
+  "sourceBody": "input.operator == \"+\" ? input.a + input.b : input.operator == \"-\" ? input.a - input.b : input.operator == \"*\" ? input.a * input.b : input.operator == \"/\" ? (input.b == 0.0 ? 0.0 : input.a / input.b) : 0.0",
+  "inputSchema": {
+    "name": "evaluateExpressionIn",
+    "fields": [
+      { "name": "a", "type": "DOUBLE", "nullable": false },
+      { "name": "b", "type": "DOUBLE", "nullable": false },
+      { "name": "operator", "type": "STRING", "nullable": false }
+    ]
+  },
+  "outputSchema": {
+    "name": "evaluateExpressionOut",
+    "fields": [
+      { "name": "result", "type": "DOUBLE", "nullable": false }
+    ]
+  }
+}

@@ -1,0 +1,15 @@
+﻿{
+    "path":  "root.platform.bindings.testBinding",
+    "bindingId":  "testBinding",
+    "targetObjectPath":  "root.platform.singleton-blueprints.test1",
+    "variable":  "testBinding",
+    "dataSourcePath":  "root.platform.data-sources.cutoff",
+    "query":  "SELECT id, family, description, fam_group, commercgroup, spc, wasteforpouch, curingtime FROM public.common_families ORDER BY id",
+    "valueField":  "id",
+    "refresh":  "manual",
+    "refreshIntervalMs":  5000,
+    "triggerObjectPath":  "",
+    "triggerFunctionName":  "",
+    "enabled":  true,
+    "lastRefreshedAt":  "2026-10-16T11:49:24.769217800Z"
+}

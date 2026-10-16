@@ -1,0 +1,43 @@
+{
+  "name": "getFamilies",
+  "description": "Список семейств из external DB (public.common_families) через data source cutoff.",
+  "sourceType": "script",
+  "dataSourcePath": "root.platform.data-sources.cutoff",
+  "sourceBody": "{\"steps\":[{\"type\":\"selectMany\",\"var\":\"rows\",\"sql\":\"SELECT id, family, description, fam_group, commercgroup, spc, wasteforpouch, curingtime FROM public.common_families ORDER BY id LIMIT LEAST(COALESCE(?, 100), 1000)\",\"params\":[\"${input.num}\"]},{\"type\":\"return\",\"fields\":{\"error_code\":\"OK\",\"error_message\":\"\",\"result\":\"${rows}\"}}]}",
+  "inputSchema": {
+    "name": "getFamiliesIn",
+    "fields": [
+      {
+        "name": "num",
+        "type": "INTEGER",
+        "description": "Лимит строк; если не задан — 100 (максимум 1000).",
+        "nullable": true
+      }
+    ]
+  },
+  "outputSchema": {
+    "name": "getFamiliesOut",
+    "fields": [
+      { "name": "error_code", "type": "STRING", "nullable": false },
+      { "name": "error_message", "type": "STRING", "nullable": false },
+      {
+        "name": "result",
+        "type": "RECORD_LIST",
+        "nullable": false,
+        "nestedSchema": {
+          "name": "familyRow",
+          "fields": [
+            { "name": "id", "type": "INTEGER", "nullable": true },
+            { "name": "family", "type": "STRING", "nullable": true },
+            { "name": "description", "type": "STRING", "nullable": true },
+            { "name": "fam_group", "type": "STRING", "nullable": true },
+            { "name": "commercgroup", "type": "STRING", "nullable": true },
+            { "name": "spc", "type": "STRING", "nullable": true },
+            { "name": "wasteforpouch", "type": "STRING", "nullable": true },
+            { "name": "curingtime", "type": "STRING", "nullable": true }
+          ]
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,103 @@
+{
+  "version": "1.2.0",
+  "displayName": "CutOff",
+  "tablePrefix": "co_",
+  "schemaName": "app_cutoff",
+  "metadata": {
+    "domain": "cutoff",
+    "changelog": "1.2.0 — CSV viewer: file list + open selected file, no per-file devices"
+  },
+  "blueprints": [
+    {
+      "name": "cutoff-hub-v1",
+      "description": "CutOff CSV viewer",
+      "type": "SINGLETON",
+      "variables": [],
+      "events": [],
+      "functions": [],
+      "bindings": [],
+      "parameters": {}
+    }
+  ],
+  "migrations": [
+    {
+      "id": "cutoff_schema_v12",
+      "sql": "CREATE TABLE IF NOT EXISTS co_file (\n  file_name VARCHAR(255) PRIMARY KEY,\n  measured_date VARCHAR(16),\n  series VARCHAR(32),\n  seq VARCHAR(16),\n  source_path VARCHAR(1024) NOT NULL\n);\nCREATE TABLE IF NOT EXISTS co_open (\n  id INTEGER PRIMARY KEY,\n  file_name VARCHAR(255) NOT NULL,\n  source_path VARCHAR(1024) NOT NULL\n);\nCREATE TABLE IF NOT EXISTS co_preview (\n  sample_time VARCHAR(32),\n  channel_a VARCHAR(64),\n  step_value VARCHAR(64),\n  channel_b VARCHAR(64),\n  flag_value VARCHAR(64)\n);"
+    }
+  ],
+  "reports": [
+    {
+      "reportId": "cutoff-files",
+      "title": "Файлы CSV",
+      "description": "Список типовых CSV в каталоге",
+      "query": "SELECT file_name, measured_date, series, seq FROM co_file ORDER BY measured_date, series, seq, file_name",
+      "parameters": [],
+      "columns": [
+        { "field": "file_name", "label": "Файл" },
+        { "field": "measured_date", "label": "Дата" },
+        { "field": "series", "label": "Серия" },
+        { "field": "seq", "label": "№" }
+      ],
+      "maxRows": 2000
+    },
+    {
+      "reportId": "cutoff-samples",
+      "title": "Содержимое CSV",
+      "description": "Строки открытого файла",
+      "query": "SELECT sample_time, channel_a, step_value, channel_b, flag_value FROM co_preview",
+      "parameters": [],
+      "columns": [
+        { "field": "sample_time", "label": "Время" },
+        { "field": "channel_a", "label": "Канал A" },
+        { "field": "step_value", "label": "Шаг" },
+        { "field": "channel_b", "label": "Канал B" },
+        { "field": "flag_value", "label": "Признак" }
+      ],
+      "maxRows": 5000
+    }
+  ],
+  "functions": [
+    {
+      "objectPath": "root.platform.singleton-blueprints.cutoff-hub-v1",
+      "functionName": "co_openFile",
+      "version": "1",
+      "descriptor": {
+        "inputSchema": {
+          "name": "in",
+          "fields": [{ "name": "file_name", "type": "STRING" }]
+        },
+        "outputSchema": {
+          "name": "out",
+          "fields": [
+            { "name": "error_code", "type": "STRING" },
+            { "name": "error_message", "type": "STRING" },
+            { "name": "file_name", "type": "STRING" }
+          ]
+        }
+      },
+      "source": {
+        "type": "script",
+        "body": "{\"steps\":[{\"type\":\"selectOne\",\"var\":\"file\",\"sql\":\"SELECT file_name, source_path FROM co_file WHERE file_name = ?\",\"params\":[\"${input.file_name}\"]},{\"type\":\"failIfNull\",\"var\":\"file\",\"error_code\":\"NOT_FOUND\",\"error_message\":\"Файл не найден в каталоге\"},{\"type\":\"exec\",\"sql\":\"DELETE FROM co_open\"},{\"type\":\"exec\",\"sql\":\"INSERT INTO co_open (id, file_name, source_path) VALUES (1, ?, ?)\",\"params\":[\"${file.file_name}\",\"${file.source_path}\"]},{\"type\":\"exec\",\"sql\":\"DELETE FROM co_preview\"},{\"type\":\"exec\",\"sql\":\"INSERT INTO co_preview (sample_time, channel_a, step_value, channel_b, flag_value) SELECT * FROM CSVREAD((SELECT source_path FROM co_open WHERE id = 1), null, 'charset=UTF-8 fieldSeparator=;')\"},{\"type\":\"return\",\"fields\":{\"error_code\":\"OK\",\"error_message\":\"\",\"file_name\":\"${file.file_name}\"}}]}"
+      }
+    }
+  ],
+  "dashboards": [
+    {
+      "path": "root.platform.dashboards.cutoff-catalog",
+      "title": "CutOff — просмотр CSV",
+      "refreshIntervalMs": 15000,
+      "layoutJson": "{\"columns\":84,\"rowHeight\":8,\"widgets\":[{\"id\":\"help\",\"type\":\"html-snippet\",\"title\":\"Просмотрщик CSV\",\"x\":0,\"y\":0,\"w\":84,\"h\":10,\"htmlJson\":\"<p>Типовой файл: <code>время;канал A;шаг;канал B;признак</code>. Выберите файл в списке или в поле ниже и нажмите <b>Показать</b>.</p>\"},{\"id\":\"files\",\"type\":\"report\",\"title\":\"Файлы\",\"x\":0,\"y\":10,\"w\":56,\"h\":32,\"reportPath\":\"root.platform.reports.cutoff-files\",\"selectable\":true,\"rowParamsFromRowJson\":\"{\\\"fileName\\\":\\\"file_name\\\"}\",\"showCsv\":true},{\"id\":\"open\",\"type\":\"function-form\",\"title\":\"Открыть файл\",\"x\":56,\"y\":10,\"w\":28,\"h\":32,\"objectPath\":\"root.platform.singleton-blueprints.cutoff-hub-v1\",\"functionName\":\"co_openFile\",\"buttonLabel\":\"Показать\",\"paramBindingsJson\":\"{\\\"file_name\\\":\\\"fileName\\\"}\",\"fieldsJson\":\"[{\\\"name\\\":\\\"file_name\\\",\\\"label\\\":\\\"Файл\\\",\\\"type\\\":\\\"text\\\",\\\"required\\\":true}]\"},{\"id\":\"samples\",\"type\":\"report\",\"title\":\"Содержимое файла\",\"x\":0,\"y\":42,\"w\":84,\"h\":49,\"reportPath\":\"root.platform.reports.cutoff-samples\",\"emptyMessage\":\"Откройте файл кнопкой «Показать»\",\"showCsv\":true}]}"
+    }
+  ],
+  "operatorUi": {
+    "appId": "cutoff",
+    "title": "CutOff",
+    "defaultDashboard": "root.platform.dashboards.cutoff-catalog",
+    "dashboards": [
+      {
+        "path": "root.platform.dashboards.cutoff-catalog",
+        "title": "Просмотр CSV"
+      }
+    ]
+  }
+}

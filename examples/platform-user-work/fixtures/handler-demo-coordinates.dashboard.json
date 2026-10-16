@@ -1,0 +1,29 @@
+﻿{
+    "path":  "root.platform.dashboards.handler-demo-coordinates",
+    "title":  "Handler demo - coordinates",
+    "refreshIntervalMs":  5000,
+    "layout":  {
+                   "columns":  84,
+                   "rowHeight":  8,
+                   "widgets":  [
+                                   {
+                                       "id":  "sample-variable-editor-1792145296409-0",
+                                       "title":  "ÐÐ°ÑÐ°Ð¼ÐµÑÑÑ Ð´Ð°ÑÑÐ¸ÐºÐ°",
+                                       "x":  0,
+                                       "y":  0,
+                                       "w":  57,
+                                       "h":  24,
+                                       "objectPath":  "root.platform.devices.handler-demo-01",
+                                       "variableName":  "",
+                                       "valueField":  "value",
+                                       "modelHintPath":  "root.platform.devices.demo-sensor-01",
+                                       "sampleTemplate":  true,
+                                       "type":  "variable-editor",
+                                       "variablesJson":  "[\n  \"sineWave\",\n  \"sawtoothWave\",\n  \"pressure\"\n]",
+                                       "zIndex":  1,
+                                       "visible":  true
+                                   }
+                               ]
+               },
+    "layoutJson":  "{\"columns\":84,\"rowHeight\":8,\"widgets\":[{\"id\":\"sample-variable-editor-1792145296409-0\",\"title\":\"ÐÐ°ÑÐ°Ð¼ÐµÑÑÑ Ð´Ð°ÑÑÐ¸ÐºÐ°\",\"x\":0,\"y\":0,\"w\":57,\"h\":24,\"objectPath\":\"root.platform.devices.handler-demo-01\",\"variableName\":\"\",\"valueField\":\"value\",\"modelHintPath\":\"root.platform.devices.demo-sensor-01\",\"sampleTemplate\":true,\"type\":\"variable-editor\",\"variablesJson\":\"[\\n  \\\"sineWave\\\",\\n  \\\"sawtoothWave\\\",\\n  \\\"pressure\\\"\\n]\",\"zIndex\":1,\"visible\":true}]}"
+}

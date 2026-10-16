@@ -1,0 +1,13 @@
+﻿{
+    "path":  "root.platform.data-sources.cutoff",
+    "displayName":  "Ð¡Ð¾Ð´ÐµÑÐ¶Ð¸Ð¼Ð¾Ðµ CSV",
+    "description":  "Bundle data source for cutoff",
+    "variableDisplayName":  "",
+    "connectionMode":  "external",
+    "schemaName":  "app_cutoff",
+    "jdbcUrl":  "jdbc:postgresql://localhost:5432/anima_db_2026_0220",
+    "jdbcDriverClass":  "org.postgresql.Driver",
+    "jdbcUsername":  "postgres",
+    "jdbcPassword":  "********",
+    "poolSize":  5
+}

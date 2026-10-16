@@ -1,0 +1,19 @@
+{
+  "name": "run",
+  "description": "List DEVICE objects under root.platform.devices (path, displayName, type)",
+  "inputSchema": {
+    "name": "objectQueryInput",
+    "fields": [{ "name": "patch", "type": "STRING", "description": "Optional OQ patch JSON", "nullable": true }]
+  },
+  "outputSchema": {
+    "name": "objectQueryOutput",
+    "fields": [
+      { "name": "rows", "type": "STRING", "description": "JSON array of row maps", "nullable": false },
+      { "name": "rowCount", "type": "INTEGER", "description": "Number of rows", "nullable": false },
+      { "name": "patchApplied", "type": "BOOLEAN", "nullable": true },
+      { "name": "patchesApplied", "type": "INTEGER", "nullable": true }
+    ]
+  },
+  "sourceType": "object-query",
+  "sourceBody": "{\"from\":{\"alias\":\"device\",\"sourcePathPattern\":\"root.platform.devices.*\",\"objectTypes\":[\"DEVICE\"]},\"fields\":[{\"name\":\"path\",\"source\":\"path\",\"alias\":\"device\"},{\"name\":\"displayName\",\"source\":\"displayName\",\"alias\":\"device\"},{\"name\":\"type\",\"source\":\"type\",\"alias\":\"device\"}],\"orderBy\":[{\"field\":\"path\",\"dir\":\"asc\"}],\"limit\":2000}"
+}
